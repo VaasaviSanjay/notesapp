@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1><i class="fa-solid fa-clipboard"></i> Notes App</h1>
+            <br>
+            <ul>
+            <li><i class="fas fa-book"></i> All Notes</li>
+            <li><i class="fas fa-plus-circle"></i> New Note</li>
+            <li><i class="fas fa-star"></i> Favorites</li>
+            <li><i class="fas fa-folder"></i> Categories</li>
+            <li><i class="fas fa-tags"></i> Tags</li>
+            <li><i class="fas fa-search"></i> Search</li>
+            <li><i class="fas fa-trash"></i> Trash</li>
+            <li><i class="fas fa-cog"></i> Settings</li>
+            <li><i class="fas fa-question-circle"></i> Help</li>
+            <li><i class="fas fa-info-circle"></i> About</li>
+            </ul>
+        </aside>
+        <main>
+            <header>
+                <div class="left"><h2>All Notes</h2></div>
+                <div class="right"> 
+                    <ul>
+                        <li><button>  + Add Note</button></li>
+                        <li><i class="fas fa-pen-to-square"></i></li>
+                        <li><i class="fas fa-trash"></i></li>
+                        <li><i class="fas fa-ellipsis"></i></li>
+                    </ul>
+                </div>
+            </header>
+             <div id="notesContainer" style="display:flex; flex-wrap:wrap; gap:15px; margin-top:20px; padding:20px;"></div>
+        </main>        
+    </div>
+
+    <div class="form-layout" id="form-layout">
+         <form id="noteform">
+            <span id="closeForm" class="close-btn">x</span>
+            <input type="text" id="noteId" placeholder="Enter your ID">
+            <input type="text" id="title" placeholder="Title">
+            <textarea id="description" placeholder="Description"></textarea>
+
+            <label class="group-label">Priority</label>
+            <div class="radio-row">
+                 <label><input type="radio" name="priority" value="High"> High</label>
+                 <label><input type="radio" name="priority" value="Medium"> Medium</label>
+                 <label><input type="radio" name="priority" value="Low"> Low</label>
+            </div>
+
+            <label class="group-label">Category</label>
+             <div class="radio-row">
+              <label><input type="radio" name="category" value="Work"> Work</label>
+              <label><input type="radio" name="category" value="Study"> Study</label>
+              <label><input type="radio" name="category" value="Personal"> Personal</label>
+             </div>
+             <button type="submit" class="submit-btn">Submit</button>
+         </form>
+    </div>
+
+   
+
+    <script>
+    // Sidebar active
+    const menulist = document.querySelectorAll(".sidebar ul li");
+    const leftheading = document.querySelector(".left h2");
+    menulist.forEach(item  => {
+        item.addEventListener("click",() => {
+            menulist.forEach(i =>i.classList.remove("active"));
+            item.classList.add("active");
+            leftheading.innerText = item.innerText.trim();
+       });
+    });
+
+    // Popup open/close - ADD BUTTON FIX
+    const addBtn = document.querySelector(".right ul li button");
+    const layer = document.getElementById("form-layout");
+    const closeIcon = document.getElementById("closeForm");
+
+    addBtn.addEventListener("click", () => {
+        layer.classList.add("show");
+    });
+    closeIcon.addEventListener("click", () => {
+        layer.classList.remove("show");
+    });
+    layer.addEventListener("click", (e) => {
+        if (e.target === layer) {
+            layer.classList.remove("show");
+        }
+    });
+
+    // Notes Logic
+    let form = document.getElementById("noteform");
+    let container = document.getElementById("notesContainer");
+    let notes = JSON.parse(localStorage.getItem('notes')) || [];
+    displayNotes();
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        let id = document.getElementById("noteId").value;
+        let title = document.getElementById("title").value;
+        let desc = document.getElementById("description").value;
+        let priority = document.querySelector("input[name='priority']:checked")?.value || 'Low';
+        let category = document.querySelector("input[name='category']:checked")?.value || 'Work';
+
+        let newNote = {
+            id: id,
+            title: title,
+            description: desc,
+            priority: priority,
+            category: category,
+            date: new Date().toLocaleDateString()
+        }
+
+        notes.push(newNote);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+        form.reset();
+        layer.classList.remove("show");
+    });
+
+    function displayNotes(){
+        container.innerHTML = '';
+        notes.forEach((note, index) => {
+            let card = document.createElement('div');
+            card.style.cssText = 'width:250px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+            let color = note.priority === 'High' ? 'red' : note.priority === 'Medium' ? 'orange' : 'green';
+            card.innerHTML = `
+              <h3>${note.title}</h3>
+              <p><b>ID:</b> ${note.id}</p>
+              <p>${note.description}</p>
+              <br>
+              <p><span style="background:${color}; color:white; padding:3px 8px; border-radius:5px;">${note.priority}</span> 
+                 <span style="background:#0d1b4a; color:white; padding:3px 8px; border-radius:5px;">${note.category}</span></p>
+              <br>
+                 <small>${note.date}</small>
+              <br><br>
+              <button onclick="deleteNote(${index})" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px;">Delete</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function deleteNote(index){
+        notes.splice(index, 1);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        displayNotes();
+    }
+    </script>
+</body>
+</html>

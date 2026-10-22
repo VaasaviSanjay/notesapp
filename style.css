@@ -1,0 +1,27 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+.container { display: flex; }
+.sidebar { width: 250px; min-height: 100vh; background-color: navy; color: aliceblue; padding: 10px; }
+.sidebar ul li { list-style: none; padding: 13px; font-size: large; cursor: pointer; margin: 5px 0; border-radius: 5px; }
+.sidebar ul li i { margin-right: 10px; }
+.sidebar ul li:hover { background-color: white; color: black; }
+.sidebar ul li.active { background-color: white; color: red; font-weight: 600; border-left: 4px solid red; }
+.sidebar ul li.active i { color: red; }
+
+main { flex-grow: 1; min-height: 100vh; padding: 20px; background-color: aliceblue; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.right ul { display: flex; gap: 10px; list-style: none; align-items: center; }
+.right button { width: 100px; height: 35px; border-radius: 5px; background-color: blue; color: white; border: none; cursor: pointer; }
+
+.form-layout { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+.form-layout.show { display: flex; }
+#noteform { position: relative; background: white; width: 400px; padding: 25px; border-radius: 10px; display: flex; flex-direction: column; gap: 12px; }
+#noteform input, #noteform textarea { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+.close-btn { position: absolute; top: -10px; right: -10px; width: 30px; height: 30px; background: red; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+.submit-btn { margin: 10px auto 0; display: block; width: 100px; background: green; }
+
+#notesContainer { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; align-items: flex-start; justify-content: flex-start; }
+.note-card { width: 250px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.badge { color: white; padding: 3px 8px; border-radius: 5px; font-size: 12px; }
+.delete-btn { background: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+.radio-row { display: flex; gap: 15px; }
+.group-label { font-weight: bold; }
